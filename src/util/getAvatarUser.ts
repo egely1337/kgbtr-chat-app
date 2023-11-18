@@ -1,4 +1,5 @@
 import axios from "axios";
+import client from "../../prisma/prisma";
 
 
 type User = {
@@ -16,7 +17,19 @@ export default async function GetAvatarUser(
 ): Promise<string | undefined> {
     return new Promise(async (resolve,reject) => {
         try {
-            const res: User = await axios.get(`https://www.reddit.com/user/${username}/about.json`).then(res => res.data);
+            await client.message.findFirst({
+                where: {
+                    author: username
+                }
+            }).then(res => {
+                if(res) {
+                    resolve(res.author_image);
+                }
+            });
+
+            const res: User = await axios.get(`https://www.reddit.com/user/${username}/about.json`, {
+                timeout: 2000
+            }).then(res => res.data);
             resolve(res.data.subreddit.icon_img.replace(/&amp;/g, '&'));
         } catch(err) {
             reject(undefined);

@@ -2,13 +2,14 @@ import React from "react";
 
 import LoginWithReddit from "../components/loginwithreddit";
 
-import {signIn} from 'next-auth/react';
+import {signIn, useSession} from 'next-auth/react';
 import { useRouter } from "next/router";
 
 export default function Page(props: {
 
 }) {
   const router = useRouter();
+  const session = useSession();
 
   async function SignInWithReddit() {
     await signIn("reddit", {
@@ -17,6 +18,12 @@ export default function Page(props: {
       router.push((response?.ok ? "/chat" : "/"));
     })
   }
+
+  React.useEffect(() => {
+    if(session.status == "authenticated") {
+      router.push("/chat");
+    }
+  }, [session])
   
   return(
       <>

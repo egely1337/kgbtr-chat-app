@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "./auth/[...nextauth]";
-import socket from "../../server/socket";
 import GetAvatarUser from "../../util/getAvatarUser";
+import axios from "axios";
+import client from "../../../prisma/prisma";
 
 export default async function handler(
     req: NextApiRequest,
@@ -22,14 +23,33 @@ export default async function handler(
         }        
         const {message} = req.body;
 
-        socket.emit('message', {
+        if(!message) {
+            return res.json({
+                message: "Type something!"
+            })
+        }
+
+        const author_image = await GetAvatarUser(session.user.name);
+
+        await axios.post(`${process.env.WEBSOCKET_URL}/create_message`, {
             message: message,
-            author: session.user.name,
             created_at: new Date(),
-            author_image: await GetAvatarUser(session.user.name)
+            author: session.user.name,
+            author_image: author_image
+        }).then(res => res.data);
+
+        await client.message.create({
+            data: {
+                message: message,
+                author: session.user.name,
+                author_image: author_image,
+                created_at: new Date()
+            }
         })
 
-        res.status(200).end();
+        return res.json({
+            status: true
+        });
     } catch(err) {
         return res.json({
             status: false,

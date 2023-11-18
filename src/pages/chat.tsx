@@ -4,15 +4,13 @@ import MessageInput from "../components/input";
 
 import io from 'socket.io-client';
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 import config from "../config.json";
 
-import { useSession } from "next-auth/react";
 
 export default function Page(props: {
 }) {
-    const session = useSession();
-
     const [messages, setMessages] = React.useState<{
         author: string,
         message: string,
@@ -20,22 +18,38 @@ export default function Page(props: {
         created_at: Date
     }[]>([]);
 
-    const socket = io(config.websocket_url);
     const [input, setInput] = React.useState<string>("");
-
-    const scrollReferance = React.useRef<HTMLDivElement>(null);
+    const [inputEnabled, setInputEnabled] = React.useState<boolean>(false);
+    const chatContainerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
+        const socket = io(config.websocket_url);
+
         socket.on('message', ({message, author, author_image, created_at}) => {
-            setMessages([...messages, {
+            const element: {
+                message: string,
+                author: string,
+                author_image: string,
+                created_at: Date
+            } = {
                 message: message,
                 author: author,
                 author_image: author_image,
                 created_at: created_at
-            }])
+            };
+            setMessages((prev) => [...prev, element]);
         })
-    }, [socket]);
 
+        return () => {
+            socket.disconnect();
+        }
+    }, []);
+
+    React.useEffect(() => {
+        if(chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     return(
         <>
@@ -43,7 +57,7 @@ export default function Page(props: {
                 id="chat"
                 className="h-screen w-full flex flex-col justify-center items-center"
             >
-                <div className="lg:w-5/6 w-full lg:h-5/6 h-full overflow-auto overflow-y-hidden p-12 bg-[#404040]">
+                <div ref={chatContainerRef} className="lg:w-5/6 w-full lg:h-5/6 h-full overflow-auto p-8 bg-[#404040]">
                     <div className="flex flex-col">
                         {messages?.map((value, index) => {
                             return(
@@ -61,12 +75,14 @@ export default function Page(props: {
                     </div>
                 </div>
                 <MessageInput 
+                    enabled={!inputEnabled}
                     className="mt-4"
                     onChange={({target}) => setInput(target.value)}
-                    onSubmit={() => {
-                        axios.post("/api/message", {
+                    onSubmit={async () => {
+                        await axios.post("/api/message", {
                             message: input
                         })
+                        setInput("");
                     }} 
                 />
             </section>

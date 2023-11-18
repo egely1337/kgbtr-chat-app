@@ -1,5 +1,6 @@
 import React from "react";
 
+import strftime from "strftime";
 
 export default function Message(props: {
     message: string,
@@ -10,15 +11,16 @@ export default function Message(props: {
     sameUser: boolean
 }) {
     return(
-        <div className={`${props.end ? "self-end" : "self-start"} flex flex-col`} id="message">
-            {props.sameUser && <div className={`flex items-center gap-2 flex-row`}>
+        <div className={`${props.end ? "self-end" : "self-start"} mt-4 flex flex-row`} id="message">
+            <div className={`flex items-center gap-2 flex-row`}>
                 <img src={props.avatar_img} width={36}/>
-                <span className="text-white">{props.author}</span>
-            </div>}
-            <div className="lg:p-4 p-2 mt-2 bg-white rounded-md min-w-[calc(100vh-50vh)] lg:min-w-xl max-w-xs">
-                <span className="lg:text-base text-sm">{props.message}</span>
             </div>
-            {props.sameUser && <div className="mt-6"/>}
+            <div>
+                <span className="p-2 text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}</span>
+                <div className="py-4 px-2 ml-2 bg-white rounded-md min-w-[calc(100vh-50vh)] lg:min-w-xl max-w-xs">
+                    <span className="lg:text-base text-sm">{props.message}</span>
+                </div>
+            </div>
         </div>
     )
 }
