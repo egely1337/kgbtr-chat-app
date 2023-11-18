@@ -8,14 +8,16 @@ const io = new Server(server, {
     cors: {
         origin: "*"
     }
-});
+}); 
 const PORT = 3001;
 
 io.on('connection', (socket) => {
-    socket.on('message', ({message, author}) => {
+    socket.on('message', ({message, author, created_at, author_image}) => {
         io.emit('message', {
             message, 
-            author
+            author,
+            created_at,
+            author_image
         })
     });
 })

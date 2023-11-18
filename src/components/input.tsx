@@ -11,7 +11,7 @@ export default function MessageInput(props: {
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 
     return(
-        <div className={`w-5/6 flex items-center relative rounded-md bg-[#404040] ${props.className}`}>
+        <div className={`lg:w-5/6 w-full flex items-center relative rounded-md bg-[#404040] ${props.className}`}>
             <input 
                 ref={inputRef}
                 onChange={props.onChange}
