@@ -10,15 +10,7 @@ export const authOptions: AuthOptions = {
             clientId: process.env.REDDIT_CLIENT_ID,
             clientSecret: process.env.REDDIT_CLIENT_SECRET,  
         })
-    ],
-    callbacks: {
-        //@ts-ignore
-        async signIn(user, account, profile) {
-            if(account.provider == "reddit") {
-                return "/chat";
-            }
-        }
-    },
+    ]
     secret: process.env.SECRET,
     session: {
         strategy: "jwt",
