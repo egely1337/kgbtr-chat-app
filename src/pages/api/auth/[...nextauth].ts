@@ -8,23 +8,7 @@ export const authOptions: AuthOptions = {
     providers: [
         RedditProvider({
             clientId: process.env.REDDIT_CLIENT_ID,
-            clientSecret: process.env.REDDIT_CLIENT_SECRET,
-            
-            type: "oauth",
-            profile: (profile) => {
-                return {
-                    id: profile.id,
-                    name: profile.name,
-                    email: null
-                }
-            },
-            authorization: {
-                params: {
-                    duration: "permament"
-                }
-            },
-            
-            
+            clientSecret: process.env.REDDIT_CLIENT_SECRET,  
         })
     ],
     callbacks: {
