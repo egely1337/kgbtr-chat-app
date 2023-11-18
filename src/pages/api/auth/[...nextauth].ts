@@ -34,7 +34,7 @@ export const authOptions: AuthOptions = {
                 return "/chat";
             }
         }
-    }
+    },
     secret: process.env.SECRET,
     session: {
         strategy: "jwt",
