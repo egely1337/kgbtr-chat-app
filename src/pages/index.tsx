@@ -14,7 +14,7 @@ export default function Page(props: {
     await signIn("reddit", {
       redirect: true
     }).then(response => {
-      router.push((response.ok ? "/chat" : "/"));
+      router.push((response?.ok ? "/chat" : "/"));
     })
   }
   
