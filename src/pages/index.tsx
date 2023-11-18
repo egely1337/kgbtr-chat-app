@@ -3,15 +3,19 @@ import React from "react";
 import LoginWithReddit from "../components/loginwithreddit";
 
 import {signIn} from 'next-auth/react';
+import { useRouter } from "next/router";
 
 export default function Page(props: {
 
 }) {
+  const router = useRouter();
 
   async function SignInWithReddit() {
-    signIn("reddit", {
+    await signIn("reddit", {
       redirect: true
-    });
+    }).then(response => {
+      router.push((response.ok ? "/chat" : "/"));
+    })
   }
   
   return(
