@@ -35,3 +35,17 @@
     @apply from-[#27272A] to-[#18181B] bg-gradient-to-r
   }
 }
+
+@keyframes messageCreation {
+  0% {
+    opacity: 0%;
+  }
+
+  100% {
+    opacity: 100%;
+  }
+}
+
+.messageCreation {
+  animation: messageCreation 1s;
+}

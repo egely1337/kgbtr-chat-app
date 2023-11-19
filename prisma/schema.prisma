@@ -17,3 +17,8 @@ model Message {
     author_image String
     created_at DateTime @default(now())
 }
+
+model BannedUsers {
+  id Int @id @default(autoincrement())
+  username String @unique
+}

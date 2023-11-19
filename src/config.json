@@ -1,3 +1,6 @@
 {
-    "websocket_url" : "http://localhost:3001"
+    "websocket_url" : "http://localhost:3001",
+    "moderators" : [
+        "amknewisiken"
+    ]
 }

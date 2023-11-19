@@ -7,10 +7,13 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 
 import config from "../config.json";
-
+import toast from "react-hot-toast";
 
 export default function Page(props: {
+
 }) {
+    const session = useSession();
+
     const [messages, setMessages] = React.useState<{
         author: string,
         message: string,
@@ -51,6 +54,23 @@ export default function Page(props: {
         }
     }, [messages]);
 
+    React.useEffect(() => {
+        async function GetMessages() {
+            const res: {
+                status: boolean,
+                messages: {
+                    message: string,
+                    author: string,
+                    author_image: string,
+                    created_at: Date
+                }[]
+            } =  await axios.post("/api/retrieve").then(res => res.data);
+            setMessages(res.messages);
+        }
+
+        GetMessages();
+    }, [])
+
     return(
         <>
             <section
@@ -65,8 +85,8 @@ export default function Page(props: {
                                     key={index}
                                     author={value.author}
                                     message={value.message}
-                                    end={false}
-                                    created_at={new Date()}
+                                    end={(value.author == session.data?.user?.name)}
+                                    created_at={new Date(value.created_at)}
                                     avatar_img={value.author_image}
                                     sameUser={(value.author == messages.at(index-1)?.author)}
                                 />
@@ -81,6 +101,15 @@ export default function Page(props: {
                     onSubmit={async () => {
                         await axios.post("/api/message", {
                             message: input
+                        }).then(res => {
+                            const result: {
+                                status: boolean,
+                                message: string
+                            } = res.data;
+
+                            if(result.message) {
+                                toast[result.status ? "success" : "error"](result.message)
+                            }
                         })
                         setInput("");
                     }} 

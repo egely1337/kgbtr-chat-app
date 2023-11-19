@@ -25,7 +25,7 @@ export default async function GetAvatarUser(
                 if(res) {
                     resolve(res.author_image);
                 }
-            });
+            }).catch((err) => console.error("ERR", err))
 
             const res: User = await axios.get(`https://www.reddit.com/user/${username}/about.json`, {
                 timeout: 2000

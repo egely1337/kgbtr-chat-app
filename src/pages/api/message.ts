@@ -5,6 +5,9 @@ import { authOptions } from "./auth/[...nextauth]";
 import GetAvatarUser from "../../util/getAvatarUser";
 import axios from "axios";
 import client from "../../../prisma/prisma";
+import createMessage from "../../util/createMessage";
+import isUserAdmin from "../../util/isUserAdmin";
+import handleCommands from "../../util/handleCommands";
 
 export default async function handler(
     req: NextApiRequest,
@@ -21,35 +24,31 @@ export default async function handler(
                 message: "You are not authorized."
             });
         }        
-        const {message} = req.body;
+        const {message}: {message: string} = req.body;
 
         if(!message) {
             return res.json({
-                message: "Type something!"
+                message: "Mesaj göndermek için bir şeyler gir."
             })
         }
+        
+        const commandResult = await handleCommands(message, session);
 
-        const author_image = await GetAvatarUser(session.user.name);
+        if(commandResult !== undefined) {
+            return res.json(commandResult);
+        }
 
-        await axios.post(`${process.env.WEBSOCKET_URL}/create_message`, {
-            message: message,
-            created_at: new Date(),
-            author: session.user.name,
-            author_image: author_image
-        }).then(res => res.data);
-
-        await client.message.create({
-            data: {
-                message: message,
-                author: session.user.name,
-                author_image: author_image,
-                created_at: new Date()
-            }
-        })
+        if(!await client.bannedUsers.findUnique({where: {username: session.user.name}})) {
+            await createMessage(session, message);
+            return res.json({
+                status: true
+            });
+        }
 
         return res.json({
-            status: true
-        });
+            status: false,
+            message: "Bu sohbetten yasaklandınız."
+        })
     } catch(err) {
         return res.json({
             status: false,
