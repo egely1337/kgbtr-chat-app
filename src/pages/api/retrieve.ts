@@ -21,11 +21,9 @@ export default async function handler(
         return res.json({
             status: true,
             messages: JSON.parse(JSON.stringify(await client.message.findMany({
-                take: 50,
-                where: {
-                    created_at: {
-                        lte: new Date()
-                    }
+                take: 100,
+                orderBy: {
+                    created_at: 'desc'
                 }
             })))
         })
