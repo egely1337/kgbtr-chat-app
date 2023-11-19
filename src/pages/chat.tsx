@@ -99,8 +99,10 @@ export default function Page(props: {
                     className="mt-4"
                     onChange={({target}) => setInput(target.value)}
                     onSubmit={async () => {
+                        const message = input
+                        setInput("");
                         await axios.post("/api/message", {
-                            message: input
+                            message: message
                         }).then(res => {
                             const result: {
                                 status: boolean,
@@ -111,7 +113,6 @@ export default function Page(props: {
                                 toast[result.status ? "success" : "error"](result.message)
                             }
                         })
-                        setInput("");
                     }} 
                 />
             </section>
