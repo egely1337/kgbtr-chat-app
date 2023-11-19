@@ -25,7 +25,7 @@ export default async function handler(
                 orderBy: {
                     created_at: 'desc'
                 }
-            })))
+            }).then(res => res.reverse())))
         })
 
     } catch(err) {
