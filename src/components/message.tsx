@@ -48,8 +48,11 @@ export default function Message(props: {
                         <img src={props.avatar_img} width={36}/>
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)} </span>
-                        <span className="text-white">{props.message}</span>
+                        <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)} </Link>
+                        { props.message.includes("https://") && /\.(png|jpg|gif)$/i.test(props.message) ? 
+                            <img className="lg:max-w-xl max-w-sm" src={props.message}/> : 
+                            <span className={`text-white ${checkOnlyEmoji(props.message) ? "text-6xl" : "text-base"}`}>{props.message}</span>
+                        }
                     </div>
             </div>
         )
