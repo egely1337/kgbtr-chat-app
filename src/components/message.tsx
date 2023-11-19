@@ -27,7 +27,7 @@ export default function Message(props: {
                                 });
                             }} 
                             size={10} 
-                            className="self-end mt-4 text-gray-300 hover:text-opacity-70"
+                            className="self-end mt-4 text-gray-300 hover:text-opacity-70 cursor-pointer"
                         />
                     </div>
                     <div className={`flex items-center gap-2 flex-row ml-4`}>
