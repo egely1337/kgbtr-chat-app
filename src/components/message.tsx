@@ -20,8 +20,8 @@ export default function Message(props: {
             <div className={`self-end messageCreation mt-4 flex flex-row`} id="message">
                     <div className="flex flex-col text-right">
                         <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </Link>
-                        {   props.message.includes("https://") && /\.(png|jpg)$/i.test(props.message) ? 
-                            <img className="max-w-xl" src={props.message}/>
+                        {   props.message.includes("https://") && /\.(png|jpg|gif)$/i.test(props.message) ? 
+                            <img className="lg:max-w-xl max-w-sm" src={props.message}/>
                             :
                             <span className="text-white">{props.message}</span>
                         }
