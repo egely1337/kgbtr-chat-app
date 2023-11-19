@@ -28,6 +28,7 @@ export default async function handler(
 
         if(!message) {
             return res.json({
+                status: false,
                 message: "Mesaj göndermek için bir şeyler gir."
             })
         }
@@ -40,9 +41,7 @@ export default async function handler(
 
         if(!await client.bannedUsers.findUnique({where: {username: session.user.name}})) {
             await createMessage(session, message);
-            return res.json({
-                status: true
-            });
+            res.status(200).end();
         }
 
         return res.json({

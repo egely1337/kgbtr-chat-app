@@ -12,7 +12,7 @@ type User = {
     }
 }
 
-export default async function GetAvatarUser(
+export default async function getAvatarUser(
     username: string
 ): Promise<string | undefined> {
     return new Promise(async (resolve,reject) => {

@@ -1,5 +1,5 @@
 import { Session } from "next-auth";
-import GetAvatarUser from "./getAvatarUser";
+import getAvatarUser from "./getAvatarUser";
 import axios from "axios";
 import client from "../../prisma/prisma";
 
@@ -9,7 +9,7 @@ export default async function createMessage(
     message: string
 ): Promise<Boolean> {
     try {
-        const author_image = await GetAvatarUser(session.user.name);
+        const author_image = await getAvatarUser(session.user.name);
 
         await axios.post(`${process.env.WEBSOCKET_URL}/create_message`, {
             message: message,
