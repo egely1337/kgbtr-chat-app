@@ -16,7 +16,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "3000:3000"
+      - "8000:3000"
     env_file:
       - .env
     command: bash -c "npx prisma generate && npx prisma db push &&  npm run build && npm run start"
@@ -31,7 +31,7 @@ services:
     volumes:
       - ./pg-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - common_net
   
