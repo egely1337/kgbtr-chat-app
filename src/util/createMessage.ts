@@ -29,6 +29,7 @@ export default async function createMessage(
 
         return true;
     } catch(err) {
+        console.error(err);
         return false;
     }
 }

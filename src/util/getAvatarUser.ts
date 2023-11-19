@@ -32,6 +32,7 @@ export default async function getAvatarUser(
             }).then(res => res.data);
             resolve(res.data.subreddit.icon_img.replace(/&amp;/g, '&'));
         } catch(err) {
+            console.error(err);
             reject(undefined);
         }
     })

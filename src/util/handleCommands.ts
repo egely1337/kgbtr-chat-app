@@ -43,6 +43,7 @@ export default async function handleCommands(
             };
         }
     } catch(err) {
+        console.error(err);
         return undefined;
     }
 }

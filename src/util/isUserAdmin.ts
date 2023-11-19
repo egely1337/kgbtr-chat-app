@@ -6,6 +6,7 @@ export default async function isUserAdmin(
     try {
         return config.moderators.includes(username)
     } catch(err) {
+        console.error(err);
         return false;
     }
 }
