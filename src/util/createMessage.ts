@@ -11,14 +11,7 @@ export default async function createMessage(
     try {
         const author_image = await getAvatarUser(session.user.name);
 
-        await axios.post(`${process.env.WEBSOCKET_URL}/create_message`, {
-            message: message,
-            created_at: new Date(),
-            author: session.user.name,
-            author_image: author_image
-        }).then(res => res.data);
-
-        await client.message.create({
+        const {id} = await client.message.create({
             data: {
                 message: message,
                 author: session.user.name,
@@ -26,6 +19,14 @@ export default async function createMessage(
                 created_at: new Date()
             }
         })
+
+        await axios.post(`${process.env.WEBSOCKET_URL}/create_message`, {
+            message: message,
+            created_at: new Date(),
+            author: session.user.name,
+            author_image: author_image,
+            id: id
+        }).then(res => res.data);
 
         return true;
     } catch(err) {

@@ -18,7 +18,8 @@ export default function Page(props: {
         author: string,
         message: string,
         author_image: string,
-        created_at: Date
+        created_at: Date,
+        id: number
     }[]>([]);
 
     const [input, setInput] = React.useState<string>("");
@@ -28,21 +29,30 @@ export default function Page(props: {
     React.useEffect(() => {
         const socket = io(config.websocket_url);
 
-        socket.on('message', ({message, author, author_image, created_at}) => {
+        socket.on('message', ({message, author, author_image, created_at, id}) => {
             const element: {
                 message: string,
                 author: string,
                 author_image: string,
-                created_at: Date
+                created_at: Date,
+                id: number
             } = {
                 message: message,
                 author: author,
                 author_image: author_image,
-                created_at: created_at
+                created_at: created_at,
+                id: id
             };
             setMessages((prev) => [...prev, element]);
         })
 
+        socket.on('delete', ({id}) => {
+            setMessages((prev) => {
+                return prev.filter((value) => value.id !== id)
+            });    
+        })
+
+        
         return () => {
             socket.disconnect();
         }
@@ -65,7 +75,8 @@ export default function Page(props: {
                     message: string,
                     author: string,
                     author_image: string,
-                    created_at: Date
+                    created_at: Date,
+                    id: number
                 }[]
             } =  await axios.post("/api/retrieve").then(res => res.data);
             setMessages(res.messages);
@@ -86,6 +97,7 @@ export default function Page(props: {
                             return(
                                 <Message
                                     key={index}
+                                    id={value.id}
                                     author={value.author}
                                     message={value.message}
                                     end={(value.author == session.data?.user?.name)}
