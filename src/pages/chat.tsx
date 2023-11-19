@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 
 import config from "../config.json";
 import toast from "react-hot-toast";
+import Head from "next/head";
 
 export default function Page(props: {
 
@@ -87,11 +88,14 @@ export default function Page(props: {
 
     return(
         <>
+            <Head>
+                <title>Sohbet</title>
+            </Head>
             <section
                 id="chat"
                 className="h-screen w-full flex flex-col justify-center items-center"
             >
-                <div ref={chatContainerRef} className="lg:w-5/6 w-full lg:h-5/6 h-full overflow-auto p-8 bg-[#404040]">
+                <div ref={chatContainerRef} className="lg:w-5/6 w-full lg:h-5/6 h-full overflow-auto lg:p-8 p-2 bg-[#404040]">
                     <div className="flex flex-col">
                         {messages?.map((value, index) => {
                             return(

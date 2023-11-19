@@ -4,6 +4,7 @@ import LoginWithReddit from "../components/loginwithreddit";
 
 import {signIn, useSession} from 'next-auth/react';
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Page(props: {
 
@@ -27,6 +28,9 @@ export default function Page(props: {
   
   return(
       <>
+          <Head>
+            <title>KGBTR BAR</title>
+          </Head>
           <section 
             id="main"
             className="min-h-screen flex flex-col items-center justify-center"
