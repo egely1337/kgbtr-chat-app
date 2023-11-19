@@ -4,6 +4,7 @@ import React from "react";
 import { FaTrash } from "react-icons/fa";
 
 import strftime from "strftime";
+import checkOnlyEmoji from "../util/checkOnlyEmoji";
 
 export default function Message(props: {
     message: string,
@@ -23,7 +24,7 @@ export default function Message(props: {
                         {   props.message.includes("https://") && /\.(png|jpg|gif)$/i.test(props.message) ? 
                             <img className="lg:max-w-xl max-w-sm" src={props.message}/>
                             :
-                            <span className="text-white">{props.message}</span>
+                            <span className={`text-white ${checkOnlyEmoji(props.message) ? "text-6xl" : "text-base"}`}>{props.message}</span>
                         }
                         <FaTrash 
                             onClick={async () => {
