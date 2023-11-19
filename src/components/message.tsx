@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 import React from "react";
 import { FaTrash } from "react-icons/fa";
 
@@ -18,8 +19,12 @@ export default function Message(props: {
         return(
             <div className={`self-end messageCreation mt-4 flex flex-row`} id="message">
                     <div className="flex flex-col text-right">
-                        <span className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </span>
-                        <span className="text-white">{props.message}</span>
+                        <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </Link>
+                        {   (props.message.includes("https://") && (props.message.endsWith(".gif") || props.message.endsWith("png"))) ? 
+                            <img src={props.message}/>
+                            :
+                            <span className="text-white">{props.message}</span>
+                        }
                         <FaTrash 
                             onClick={async () => {
                                 await axios.post("/api/delete", {

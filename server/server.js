@@ -16,15 +16,6 @@ const PORT = 3001;
 app.use(bodyParser.json());
 io.on('connection', (socket) => {
     
-    socket.on('message', ({message, author, created_at, author_image, id}) => {
-        io.emit('message', {
-            message, 
-            author,
-            created_at,
-            author_image,
-            id
-        })
-    });
 })
 
 app.post('/create_message', async (req, res) => {
