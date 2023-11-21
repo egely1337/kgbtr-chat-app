@@ -7,6 +7,10 @@ import strftime from "strftime";
 import checkOnlyEmoji from "../util/checkOnlyEmoji";
 import { Message } from "@prisma/client";
 
+import { SiAdguard } from "react-icons/si";
+
+import config from "../config.json";
+
 
 
 export default function Message(props: {
@@ -29,11 +33,14 @@ export default function Message(props: {
                             className="text-gray-300 cursor-pointer rotate-180"
                             size={10}
                         />
-                        <span className="font-bold text-gray-300 text-xs">Yanıt verildi {props.replyMessage.message}</span>
+                        <span className="text-gray-300 text-xs">Yanıt verildi <strong>{props.replyMessage.message}</strong></span>
                     </Link>}
                     <div className="flex flex-row">
                         <div className="flex flex-col text-right">
-                            <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </Link>
+                            <div className="flex flex-row gap-2 items-center">
+                                <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </Link>
+                                <SiAdguard className="bg-red-600 p-1 rounded-md text-white" size={18}/>
+                            </div>
                             {   props.message.includes("https://") && /\.(png|jpg|gif)$/i.test(props.message) ? 
                                 <img className="lg:max-w-xl max-w-sm" src={props.message}/>
                                 :
@@ -57,7 +64,7 @@ export default function Message(props: {
                             </div>
                         </div>
                         <div className={`flex items-center gap-2 flex-row ml-4`}>
-                            <img src={props.avatar_img} width={36}/>
+                            <img src={props.avatar_img} className="min-w-[36px]" width={36}/>
                         </div>
                     </div>
             </div>
@@ -74,10 +81,13 @@ export default function Message(props: {
                 </Link>}
                 <div className="flex flex-row">
                     <div className={`flex items-center gap-2 flex-row mr-4`}>
-                            <img src={props.avatar_img} width={36}/>
+                            <img src={props.avatar_img} className="min-w-[36px]" width={36}/>
                         </div>
                         <div className="flex flex-col">
-                            <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)} </Link>
+                            <div className="flex flex-row gap-2 items-center">
+                                <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </Link>
+                                <SiAdguard className="bg-red-600 p-1 rounded-md text-white" size={18}/>
+                            </div>
                             { props.message.includes("https://") && /\.(png|jpg|gif)$/i.test(props.message) ? 
                                 <img className="lg:max-w-xl max-w-sm" src={props.message}/> : 
                                 <span className={`text-white ${checkOnlyEmoji(props.message) ? "text-6xl" : "text-base"}`}>{props.message}</span>
