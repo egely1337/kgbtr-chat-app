@@ -35,6 +35,9 @@
     @apply from-[#27272A] to-[#18181B] bg-gradient-to-r
   }
 }
+* {
+  scroll-behavior: smooth;
+}
 
 @keyframes messageCreation {
   0% {

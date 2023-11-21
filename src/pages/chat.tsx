@@ -9,40 +9,42 @@ import { useSession } from "next-auth/react";
 import config from "../config.json";
 import toast from "react-hot-toast";
 import Head from "next/head";
+import { Message as MessageDbObject } from "@prisma/client";
+
 
 export default function Page(props: {
 
 }) {
     const session = useSession();
 
-    const [messages, setMessages] = React.useState<{
-        author: string,
-        message: string,
-        author_image: string,
-        created_at: Date,
-        id: number
-    }[]>([]);
+    const [messages, setMessages] = React.useState<MessageDbObject[]>([]);
 
     const [input, setInput] = React.useState<string>("");
-    const [inputEnabled, setInputEnabled] = React.useState<boolean>(false);
     const chatContainerRef = React.useRef<HTMLDivElement>(null);
+    const [replyMessageId, setReplyMessageId] = React.useState<number>(0);
+
+    function findMessageById(idToFind: number): MessageDbObject | undefined {
+        return messages.find(message => message.id === idToFind);
+    }
 
     React.useEffect(() => {
         const socket = io(config.websocket_url);
 
-        socket.on('message', ({message, author, author_image, created_at, id}) => {
+        socket.on('message', ({message, author, author_image, created_at, id, replyMessageId}) => {
             const element: {
                 message: string,
                 author: string,
                 author_image: string,
                 created_at: Date,
-                id: number
+                id: number,
+                replyMessageId: number
             } = {
                 message: message,
                 author: author,
                 author_image: author_image,
                 created_at: created_at,
-                id: id
+                id: id,
+                replyMessageId: replyMessageId
             };
             setMessages((prev) => [...prev, element]);
         })
@@ -72,13 +74,7 @@ export default function Page(props: {
         async function GetMessages() {
             const res: {
                 status: boolean,
-                messages: {
-                    message: string,
-                    author: string,
-                    author_image: string,
-                    created_at: Date,
-                    id: number
-                }[]
+                messages: MessageDbObject[]
             } =  await axios.post("/api/retrieve").then(res => res.data);
             setMessages(res.messages);
         }
@@ -96,10 +92,11 @@ export default function Page(props: {
                 className="h-screen w-full flex flex-col justify-center items-center"
             >
                 <div ref={chatContainerRef} className="lg:w-5/6 w-full lg:h-5/6 h-full overflow-auto lg:p-8 p-2 bg-[#404040]">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         {messages?.map((value, index) => {
                             return(
                                 <Message
+                                    onReplyButtonClick={(messageId) => setReplyMessageId(messageId)}
                                     key={index}
                                     id={value.id}
                                     author={value.author}
@@ -108,20 +105,25 @@ export default function Page(props: {
                                     created_at={new Date(value.created_at)}
                                     avatar_img={value.author_image}
                                     sameUser={(value.author == messages.at(index-1)?.author)}
+                                    replyMessage={findMessageById(value.replyMessageId) }
                                 />
                             )
                         })}
                     </div>
                 </div>
-                <MessageInput 
-                    enabled={!inputEnabled}
+                <MessageInput
+                    onReplyingMessageEnd={() => setReplyMessageId(0)}
+                    replyingMessage={messages.find((value) => value.id == replyMessageId)}
                     className="mt-4"
+                    enabled
                     onChange={({target}) => setInput(target.value)}
                     onSubmit={async () => {
                         const message = input
                         setInput("");
+                        setReplyMessageId(0);
                         await axios.post("/api/message", {
-                            message: message
+                            message: message,
+                            replyMessageId: replyMessageId
                         }).then(res => {
                             const result: {
                                 status: boolean,

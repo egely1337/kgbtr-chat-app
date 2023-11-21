@@ -16,6 +16,8 @@ model Message {
     author String
     author_image String
     created_at DateTime @default(now())
+
+    replyMessageId Int @default(0)
 }
 
 model BannedUsers {

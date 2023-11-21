@@ -6,7 +6,8 @@ import client from "../../prisma/prisma";
 
 export default async function createMessage(
     session: Session,
-    message: string
+    message: string,
+    replyId: number
 ): Promise<Boolean> {
     try {
         const author_image = await getAvatarUser(session.user.name);
@@ -16,7 +17,8 @@ export default async function createMessage(
                 message: message,
                 author: session.user.name,
                 author_image: author_image,
-                created_at: new Date()
+                created_at: new Date(),
+                replyMessageId: replyId
             }
         })
 
@@ -25,7 +27,8 @@ export default async function createMessage(
             created_at: new Date(),
             author: session.user.name,
             author_image: author_image,
-            id: id
+            id: id,
+            replyMessageId: replyId
         }).then(res => res.data);
 
         return true;

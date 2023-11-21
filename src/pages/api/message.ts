@@ -2,11 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 
 import { authOptions } from "./auth/[...nextauth]";
-import GetAvatarUser from "../../util/getAvatarUser";
-import axios from "axios";
 import client from "../../../prisma/prisma";
 import createMessage from "../../util/createMessage";
-import isUserAdmin from "../../util/isUserAdmin";
 import handleCommands from "../../util/handleCommands";
 
 export default async function handler(
@@ -24,7 +21,7 @@ export default async function handler(
                 message: "You are not authorized."
             });
         }        
-        const {message}: {message: string} = req.body;
+        const {message, replyMessageId}: {message: string, replyMessageId: number} = req.body;
 
         if(!message) {
             return res.json({
@@ -40,7 +37,7 @@ export default async function handler(
         }
 
         if(!await client.bannedUsers.findUnique({where: {username: session.user.name}})) {
-            await createMessage(session, message);
+            await createMessage(session, message, replyMessageId);
             res.status(200).end();
         }
 

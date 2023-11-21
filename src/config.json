@@ -1,5 +1,5 @@
 {
-    "websocket_url" : "https://wss.animekizi.org",
+    "websocket_url" : "http://localhost:3001",
     "moderators" : [
         "amknewisiken",
         "Asim-Abi",

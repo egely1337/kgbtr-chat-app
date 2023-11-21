@@ -25,7 +25,8 @@ app.post('/create_message', async (req, res) => {
             author,
             author_image,
             created_at,
-            id
+            id,
+            replyMessageId
         } = req.body;
         
         io.emit('message', {
@@ -33,7 +34,8 @@ app.post('/create_message', async (req, res) => {
             author,
             author_image,
             created_at,
-            id
+            id,
+            replyMessageId
         })
 
         res.status(200).end();
