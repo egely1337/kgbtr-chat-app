@@ -47,6 +47,14 @@ export default function Page(props: {
                 replyMessageId: replyMessageId
             };
             setMessages((prev) => [...prev, element]);
+
+            if(chatContainerRef.current) {
+                const condition = element.author == session.data.user.name
+                
+                if(condition) {
+                    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+                }
+            } 
         })
 
         socket.on('delete', ({id}) => {
