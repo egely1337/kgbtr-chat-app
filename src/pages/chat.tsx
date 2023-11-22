@@ -63,8 +63,11 @@ export default function Page(props: {
 
     React.useEffect(() => {
         async function ScrollToBottom() {
-            if(chatContainerRef.current) {
-                chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+            const percent = (chatContainerRef.current) ? (chatContainerRef.current.scrollTop / chatContainerRef.current.scrollHeight * 100) : 0;
+            if(percent >= 88 && chatContainerRef.current) {
+                if(chatContainerRef.current.scrollTop > chatContainerRef.current.scrollHeight - 2000) {
+                    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+                }
             }
         }
         ScrollToBottom();

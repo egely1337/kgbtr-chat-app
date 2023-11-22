@@ -23,7 +23,7 @@ export default async function getAvatarUser(
                 }
             }).then(res => {
                 if(res) {
-                    resolve(res.author_image);
+                    return resolve(res.author_image);
                 }
             }).catch((err) => console.error("ERR", err))
 
