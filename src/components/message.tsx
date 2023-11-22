@@ -25,7 +25,7 @@ export default function Message(props: {
     onReplyButtonClick?: (messageId: number) => void
 }) {
     return(
-        <div className={`self-start messageCreation mt-4 flex flex-col`} id="message">
+        <div className={`self-start messageCreation mt-4 flex flex-col`} id={`message_${props.id}`}>
             {props.replyMessage && <Link href={`/chat#message_${props.replyMessage.id}`} className="flex flex-row gap-2 mb-2 items-center">
                 <FaReply
                     className="text-gray-300 cursor-pointer rotate-180"
@@ -42,14 +42,8 @@ export default function Message(props: {
                             <Link href={`https://reddit.com/u/${props.author}`} className="text-white text-sm text-opacity-70 mb-2">{props.author} {strftime("%H:%M", props.created_at)}  </Link>
                         </div>
                         { props.message.includes("https://") && /\.(png|jpg|gif)/i.test(props.message) ? 
-                            <img className="lg:max-w-xl max-w-sm" src={props.message}/> : 
+                            <img className="lg:max-w-xl max-w-xs" src={props.message}/> : 
                             <span className={`text-white ${checkOnlyEmoji(props.message) ? "text-6xl" : "text-base"}`}>{props.message}</span>
-                        }
-                        {
-                            props.message.includes("https://") && /\.(mp4|mov)/i.test(props.message) && 
-                            <video className="max-w-xl" autoPlay controls>
-                                <source src={props.message}/>
-                            </video>
                         }
                         <div className="flex flex-row gap-2">
                             <FaReply
